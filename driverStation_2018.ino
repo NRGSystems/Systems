@@ -1,8 +1,9 @@
 #include <Joystick.h>
-//#include <Adafruit_NeoPixel.h>
+#include <Adafruit_NeoPixel.h>
 
 //Adafruit Lights
-//Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, 13);
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(100, 12);
 
 // Create Joystick
 Joystick_ joystick;
@@ -10,6 +11,7 @@ Joystick_ joystick;
 
 int lightGreen = 10;
 int lightStripSwitch = 8;
+boolean stripOn = true;
 
 // number of inputs
 const int nInputs = 11;
@@ -39,22 +41,6 @@ void setup() {
   for (int i = 0; i < nInputs; i ++) {
     lastButtonState[i] = 0;
   }
-
-  // Initialize outputs
-  //pinMode(lightGreen, OUTPUT);
-  //pinMode(lightStripSwitch, INPUT_PULLUP);
-  
-  // Initialize Strip
-  //strip.begin();  
-  //strip.show();
-  
-  // inputs0
-  0000000000000000000000000000000000000000000000000000000000000000000
-
-
-
-
-
   
   for (int i = 0; i < nInputs; i ++) {
     pinMode(index[i], INPUT_PULLUP);
@@ -62,11 +48,51 @@ void setup() {
 
   // Initialize Joystick Library
   joystick.begin();
+
+  //set light switch
+  pinMode(lightStripSwitch, INPUT_PULLUP);
+
+  //turn on initial lights
+  strip.begin();
+  strip.show();
+  for(int i = 0; i<100; i++){
+    int red = 255 - (i * 2);
+    int green = i * 2;
+    strip.setPixelColor(i, red, green, 0);
+  }
+  strip.show();
+
+  
 }
 
 
 void loop() {
 
+  //Serial.print(digitalRead(lightStripSwitch));
+  //check to turn off lights
+ /* if((digitalRead(lightStripSwitch) == LOW) && stripOn == true){
+    stripOn = false;
+    for(int i = 0; i < 60; i++){
+      strip.setPixelColor(i, 0, 0, 0);
+  }
+    strip.show();
+    Serial.print("wow");
+  }
+  //check to turn on lights
+  if(digitalRead(lightStripSwitch) == HIGH && stripOn == false){
+    stripOn = true;
+    for(int i = 0; i < 60; i++){
+      strip.setPixelColor(i, 255, 0, 0);
+    }
+    strip.show();
+    Serial.print("something!");
+  }
+
+  if(digitalRead(noAuto) == LOW){
+    digitalWrite(lightGreen, HIGH);
+  } */
+
+  
   // Read pin values
   for (int i = 0; i < nInputs; i++)
   {
@@ -89,46 +115,4 @@ void loop() {
   } else {
     joystick.setButton(7, LOW);
   }
- // Serial.print(digitalRead(rightPosition));
-  // set the lights
- /* digitalWrite(lightGreen, HIGH);
-  if (digitalRead(noAuto) == LOW) {
-    digitalWrite(lightGreen, HIGH);
-  } else {
-    digitalWrite(lightGreen, LOW);
-  }
-  if (digitalRead(lightStripSwitch) == LOW) {
-    for (int cho = 0; cho <= 3; cho++){
-      for (int pos = 0; pos <= 59; pos++) {
-        for (int tai = pos; tai >= pos-17; tai--) {
-          int brio = (pos-tai) * 2;
-          int brit = 34 - brio;
-          if(cho == 0){
-            strip.setPixelColor(tai, brit, 0, brio);
-          }
-          else if(cho == 1){
-            strip.setPixelColor(tai, brio, brio, brit);
-          }
-          else if(cho == 2){
-            strip.setPixelColor(tai, brio, brit, 0);
-          }
-          else{
-            strip.setPixelColor(tai, 34, brit, 0);
-          }
-        }
-        for (int pose = pos - 17; pose >=0; pose--) {
-          strip.setPixelColor(pose, 0, 0, 0);
-        }
-        delay(15);
-        strip.show();
-      }
-      for (int pose = 42; pose <= 59; pose++) {
-        strip.setPixelColor(pose, 0, 0, 0);
-        delay(15);
-        strip.show();
-      }
-    }
-  }
-  delay(50);
-  */
 }
